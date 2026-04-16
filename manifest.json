@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Bundle",
+  "name": "OmniSnap",
   "version": "1.0.0",
   "description": "All-in-one Chrome extension: Screenshot, Full Page Capture, and Color Picker",
   "icons": {
