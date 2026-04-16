@@ -1,4 +1,4 @@
-# OmniSnap - Chrome Extension
+# Bundle - Chrome Extension
 
 All-in-one Chrome extension for screenshots, full page captures, and color picking.
 
@@ -65,7 +65,7 @@ Toggle between dark and light themes for the extension popup.
 ## File Structure
 
 ```
-OmniSnap/
+Bundle/
 ├── manifest.json          # Extension configuration (Manifest V3)
 ├── background.js         # Service worker - orchestrates capture and downloads
 ├── popup.html            # Extension popup UI

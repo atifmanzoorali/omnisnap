@@ -1,4 +1,4 @@
-# OmniSnap - Chrome Extension Plan
+# Bundle - Chrome Extension Plan
 
 ## Project Overview
 A Manifest V3 Chrome extension that combines multiple small tools (screenshot, full page capture, color picker) into one unified extension, eliminating the need to install multiple separate extensions.
@@ -14,7 +14,7 @@ A Manifest V3 Chrome extension that combines multiple small tools (screenshot, f
 ## Architecture
 
 ```
-OmniSnap/
+Bundle/
 ├── manifest.json          # MV3 manifest
 ├── background.js          # Service worker (capture logic)
 ├── popup.html             # Toolbox UI
