@@ -1,0 +1,62 @@
+{
+  "manifest_version": 3,
+  "name": "Bundle",
+  "version": "1.0.0",
+  "description": "All-in-one Chrome extension: Screenshot, Full Page Capture, and Color Picker",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "downloads",
+    "alarms"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_scripts": [],
+  "web_accessible_resources": [
+    {
+      "resources": ["selection.js", "selection.css"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "commands": {
+    "screenshot": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+1",
+        "mac": "Command+Shift+1"
+      },
+      "description": "Capture visible screenshot"
+    },
+    "fullpage": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+2",
+        "mac": "Command+Shift+2"
+      },
+      "description": "Capture full page"
+    },
+    "colorpicker": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+3",
+        "mac": "Command+Shift+3"
+      },
+      "description": "Pick color from screen"
+    }
+  }
+}
