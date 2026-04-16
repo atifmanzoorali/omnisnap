@@ -1,6 +1,10 @@
-# Bundle - Chrome Extension
+# Bundle - All-in-One Design Utility
 
-All-in-one Chrome extension for screenshots, full page captures, and color picking.
+![Chrome Web Store](https://img.shields.io/badge/Chrome-Web%20Store-Ready-brightgreen?style=flat-square)
+![Manifest Version](https://img.shields.io/badge/Manifest-V3-blue?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+
+**Bundle** is a fast, privacy-focused Chrome extension for screenshots, full page captures, and color picking. All processing happens locally on your device.
 
 ## Features
 
@@ -26,7 +30,7 @@ Capture an entire webpage including all scrollable content.
 **Output:** PNG or JPEG image saved as `full-page-TIMESTAMP.png/.jpg`
 
 **Technical features:**
-- Automatic scrolling with 600ms delay before capture + 100ms after (prevents throttling)
+- Automatic scrolling with 600ms delay before capture + 100ms after
 - Fixed/sticky elements are temporarily hidden during capture
 - JPEG format (0.8 quality) used automatically for pages >10,000px height
 - Maximum height limit: 16,000px (alerts user if exceeded)
@@ -55,6 +59,12 @@ Toggle between dark and light themes for the extension popup.
 
 ## Installation
 
+### From Chrome Web Store (Recommended)
+1. Visit the [Bundle Extension page](https://chrome.google.com/webstore) on the Chrome Web Store
+2. Click "Add to Chrome"
+3. Done!
+
+### From Source (Developer Mode)
 1. Clone the repository
 2. Open Chrome and navigate to `chrome://extensions/`
 3. Enable **Developer mode** (toggle in top right)
@@ -67,18 +77,18 @@ Toggle between dark and light themes for the extension popup.
 ```
 Bundle/
 ├── manifest.json          # Extension configuration (Manifest V3)
-├── background.js         # Service worker - orchestrates capture and downloads
-├── popup.html            # Extension popup UI
-├── popup.js             # Popup logic
-├── popup.css            # Popup styling
-├── content.js           # Content script for area selection
-├── selection.js         # Area selection logic with port communication
-├── selection.css        # Selection overlay styles
-├── fullpage.js          # Full page capture scroll logic
-├── offscreen.html       # Hidden DOM for image stitching
-├── offscreen.js         # Canvas stitching engine
-├── colorPicker.js       # Color picker logic
-└── icons/               # Extension icons
+├── background.js          # Service worker - orchestrates capture and downloads
+├── popup.html             # Extension popup UI
+├── popup.js              # Popup logic
+├── popup.css             # Popup styling
+├── content.js            # Content script for area selection
+├── selection.js          # Area selection logic with port communication
+├── selection.css         # Selection overlay styles
+├── fullpage.js           # Full page capture scroll logic
+├── offscreen.html        # Hidden DOM for image stitching
+├── offscreen.js          # Canvas stitching engine
+├── colorPicker.js        # Color picker logic
+└── icons/                # Extension icons (16x16, 48x48, 128x128)
 ```
 
 ## Architecture
@@ -90,14 +100,14 @@ Bundle/
 │ fullpage.js (Content Script)                                    │
 │  - Scrolls page incrementally                                    │
 │  - Requests captures via background                             │
-│  - Collects image chunks                                         │
+│  - Collects image chunks                                        │
 └───────────────────────┬─────────────────────────────────────────┘
                         │ chrome.runtime.sendMessage
                         ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│ background.js (Service Worker)                                  │
-│  - Captures visible tab (chrome.tabs.captureVisibleTab)        │
-│  - Creates Offscreen Document for stitching                     │
+│ background.js (Service Worker)                                   │
+│  - Captures visible tab (chrome.tabs.captureVisibleTab)          │
+│  - Creates Offscreen Document for stitching                      │
 │  - Orchestrates the process                                     │
 └───────────────────────┬─────────────────────────────────────────┘
                         │ chrome.runtime.sendMessage
@@ -105,14 +115,14 @@ Bundle/
 ┌─────────────────────────────────────────────────────────────────┐
 │ offscreen.js (Offscreen Document - DOM Environment)             │
 │  - Receives image chunks                                        │
-│  - Stitches images on <canvas>                                  │
-│  - Creates Blob URL                                              │
-│  - Sends Blob URL back to background                            │
+│  - Stitches images on <canvas>                                 │
+│  - Creates Blob URL                                             │
+│  - Sends Blob URL back to background                           │
 └───────────────────────┬─────────────────────────────────────────┘
                         │ chrome.runtime.sendMessage
                         ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│ background.js (Service Worker)                                  │
+│ background.js (Service Worker)                                   │
 │  - Receives Blob URL                                            │
 │  - Triggers chrome.downloads.download()                         │
 │  - Closes Offscreen Document                                    │
@@ -123,7 +133,7 @@ Bundle/
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│ popup.js → selection.js (Content Script)                       │
+│ popup.js → selection.js (Content Script)                        │
 │  - User drags to select area                                    │
 │  - Selection coordinates captured                               │
 └───────────────────────┬─────────────────────────────────────────┘
@@ -133,14 +143,12 @@ Bundle/
 │ background.js (Service Worker)                                  │
 │  - Receives coordinates via port                                │
 │  - Captures visible tab                                         │
-│  - Crops to selection area using OffscreenCanvas                │
+│  - Crops to selection area using Offscreen Document             │
 │  - Downloads PNG                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ## Permissions
-
-The extension requires the following permissions:
 
 | Permission | Purpose |
 |------------|---------|
@@ -182,7 +190,7 @@ The extension requires the following permissions:
 - All message listeners return `true` for async responses
 - Chrome API guards prevent errors on invalid contexts
 - Try/catch around download operations
-- Graceful failure handling with detailed console logging
+- Graceful failure handling with user-friendly error messages
 - Offscreen Document closed properly after stitching
 
 ## Troubleshooting
@@ -191,7 +199,7 @@ The extension requires the following permissions:
 1. Reload the extension
 2. Check if page height exceeds 16,000px
 3. Open Service Worker console (`chrome://extensions` → click worker link)
-4. Look for `[Offscreen]` logs indicating stitching progress
+4. Look for logs indicating stitching progress
 
 ### "Could not establish connection" Error
 - Content script may not be loaded yet
@@ -204,6 +212,14 @@ The extension requires the following permissions:
 ### Service Worker Stopping
 - The extension uses alarms and port connections to stay alive
 - Long captures may still cause worker restart (capture will fail gracefully)
+
+## Privacy
+
+**Bundle does not collect, store, or transmit any user data.**
+
+All image processing happens locally on your device using Chrome's Offscreen Document API. No data is ever sent to external servers.
+
+See our [Privacy Policy](https://atifmanzoorali.github.io/bundle/privacy.html) for full details.
 
 ## Tech Stack
 
