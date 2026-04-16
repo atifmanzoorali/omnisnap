@@ -112,20 +112,9 @@ function startColorPicker(card) {
         return;
       }
 
-      try {
-        await chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          files: ['content.js']
-        });
-      } catch (e) {
-        if (!e.message.includes('already injected')) {
-          console.warn('Script injection warning:', e.message);
-        }
-      }
-
       await new Promise(resolve => setTimeout(resolve, 100));
 
-      chrome.tabs.sendMessage(tab.id, { action: 'OPEN_PICKER' }, (response) => {
+      chrome.tabs.sendMessage(tab.id, { action: 'OPEN_PICKER' }, () => {
         window.close();
       });
     } catch (error) {
