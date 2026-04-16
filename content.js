@@ -1,18 +1,21 @@
-let canvas = null;
-let ctx = null;
-let isSelecting = false;
-let isLocked = false;
-let startX = 0, startY = 0;
-let currentX = 0, currentY = 0;
-let selection = null;
-let captureBar = null;
+(function() {
+  'use strict';
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'startSelection') {
-    initSelection();
-    return { success: true };
-  }
-});
+  let canvas = null;
+  let ctx = null;
+  let isSelecting = false;
+  let isLocked = false;
+  let startX = 0, startY = 0;
+  let currentX = 0, currentY = 0;
+  let selection = null;
+  let captureBar = null;
+
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'startSelection') {
+      initSelection();
+      return true;
+    }
+  });
 
 function initSelection() {
   cleanup();
@@ -271,7 +274,7 @@ async function captureSelection() {
     };
 
     const response = await chrome.runtime.sendMessage({
-      action: 'cropAndDownload',
+      action: 'CAPTURE_SELECTION',
       coords: coords
     });
 
@@ -312,3 +315,5 @@ function onKeyDown(e) {
     cleanup();
   }
 }
+
+})();

@@ -87,7 +87,7 @@
 
     if (request.action === 'COLOR_PICKED') {
       console.log('[Background] Color picked:', request.value);
-      return;
+      return true;
     }
 
     if (request.action === 'CAPTURE_SELECTION') {
@@ -217,11 +217,20 @@
 
       await ensureOffscreenDocument();
 
-      const response = await chrome.runtime.sendMessage({
-        action: 'CROP_AND_DOWNLOAD',
-        dataUrl: dataUrl,
-        coords: coords
-      });
+      let response;
+      try {
+        response = await chrome.runtime.sendMessage({
+          action: 'CROP_AND_DOWNLOAD',
+          dataUrl: dataUrl,
+          coords: coords
+        });
+      } catch (error) {
+        if (error.message.includes('Receiving end does not exist')) {
+          console.error('[Background] Offscreen document closed unexpectedly');
+          throw new Error('Processing context lost. Please try again.');
+        }
+        throw error;
+      }
 
       console.log('[Background] Offscreen crop response:', response);
 
@@ -278,11 +287,20 @@
 
       console.log('[Background] Sending chunks to offscreen for stitching');
 
-      const response = await chrome.runtime.sendMessage({
-        action: 'STITCH_AND_DOWNLOAD',
-        chunks: chunks,
-        dimensions: dimensions
-      });
+      let response;
+      try {
+        response = await chrome.runtime.sendMessage({
+          action: 'STITCH_AND_DOWNLOAD',
+          chunks: chunks,
+          dimensions: dimensions
+        });
+      } catch (error) {
+        if (error.message.includes('Receiving end does not exist')) {
+          console.error('[Background] Offscreen document closed unexpectedly');
+          throw new Error('Processing context lost. Please try again.');
+        }
+        throw error;
+      }
 
       console.log('[Background] Offscreen response:', response);
 
