@@ -43,8 +43,7 @@ function handleToolAction(tool, card) {
     setButtonLoading(card, 'Capturing...');
     setTimeout(() => resetButton(card), 1000);
   } else if (tool === 'colorpicker') {
-    setButtonLoading(card, 'Selecting...');
-    setTimeout(() => resetButton(card), 1000);
+    startColorPicker(card);
   }
 }
 
@@ -96,6 +95,31 @@ function startAreaSelection(card) {
       window.close();
     } catch (error) {
       console.error('Failed to start selection:', error);
+      resetButton(card);
+    }
+  })();
+}
+
+function startColorPicker(card) {
+  setButtonLoading(card, 'Selecting...');
+
+  (async () => {
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (!tab) {
+        console.error('No active tab found');
+        resetButton(card);
+        return;
+      }
+
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ['colorPicker.js']
+      });
+
+      window.close();
+    } catch (error) {
+      console.error('Failed to start color picker:', error);
       resetButton(card);
     }
   })();

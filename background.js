@@ -38,6 +38,11 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('Background received message:', request.action);
   
+  if (request.action === 'COLOR_PICKED') {
+    console.log('Color picked:', request.value);
+    return;
+  }
+  
   if (request.action === 'CAPTURE_SELECTION') {
     captureAndCrop(request.coords, request.tabId)
       .then((result) => {
